@@ -1,9 +1,24 @@
+import { useEffect, useState } from "react";
+import { api } from "../../services/endpoint";
+import { CategoriesType } from "../../types/categories";
 
 type ModalType = {
     showModal: (isShow: boolean) => void;
 }
 
 export const Modal = ({ showModal }: ModalType) => {
+    const [categories, setCategories] = useState<CategoriesType[]>([])
+
+    useEffect(() => {
+        async function getCategories() {
+            const { data } = await api.get('/categories')
+
+            setCategories(data)
+        }
+
+        getCategories()
+    }, [])
+    
     return (
         <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
@@ -22,17 +37,23 @@ export const Modal = ({ showModal }: ModalType) => {
             <div className="relative p-6 flex-auto">
               <form className="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 w-full">
                 <label className="block text-black text-sm font-bold mb-1">
-                  First Name
+                  Assunto
                 </label>
                 <input className="shadow appearance-none border rounded w-full py-2 px-1 text-black" />
                 <label className="block text-black text-sm font-bold mb-1">
-                  Last Name
+                  Descrição
                 </label>
-                <input className="shadow appearance-none border rounded w-full py-2 px-1 text-black" />
+                <textarea className="shadow appearance-none border rounded w-full py-2 px-1 text-black" name="" id=""></textarea>
                 <label className="block text-black text-sm font-bold mb-1">
-                  Address
+                  Categoria
                 </label>
-                <input className="shadow appearance-none border rounded w-full py-2 px-1 text-black" />
+                <select className="shadow border rounded w-full py-2 px-1 text-black">
+                    {categories.map((category, index) =>(
+                        <option value={category.id} key={index}>
+                            {category.name}
+                        </option>
+                    ))}
+                </select>
                 <label className="block text-black text-sm font-bold mb-1">
                   City
                 </label>
