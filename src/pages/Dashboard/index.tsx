@@ -40,6 +40,7 @@ export const Dashboard = () => {
       setIsLoading(false);
       setServices(data);
     } catch (error: any) {
+      setIsLoading(false)
       throw new Error(error);
     }
   }
@@ -82,71 +83,73 @@ export const Dashboard = () => {
           <ChatCenteredText size={32} />
           <h1 className='text-4xl font-thin text-gray-900 dark:text-black'>Chamados</h1>
         </D.Header>
-        {isLoading ? (
+        {isLoading && (
           <div className='flex flex-col justify-center items-center'>
             <Loading type='spin' color='#ff0000' />
             <span className='text-4xl font-thin text-gray-900'>Carregando...</span>
           </div>
-        ) : (
+        )}
+  
+        {services.length && (
           <>
-          <div className='mb-4 flex justify-end w-100 cta-wrapper'>
-            <D.Button onClick={() => setShowModal(true)}>Criar chamado</D.Button>
-          </div>
-          <div className="relative overflow-x-auto d-table">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    Cliente
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Assunto
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Descrição
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Estado
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Categoria
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Prioridade
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {services.map((service, index) => (
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
-                    <td className="px-6 py-4">
-                      {service.customer_name}
-                    </td>
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {service.subject}
+            <div className='mb-4 flex justify-end w-100 cta-wrapper'>
+              <D.Button title='Criar chamado' onClick={() => setShowModal(true)}>Criar chamado</D.Button>
+            </div>
+            <div className="relative overflow-x-auto d-table">
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" className="px-6 py-3">
+                      Cliente
                     </th>
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {service.description}
+                    <th scope="col" className="px-6 py-3">
+                      Assunto
                     </th>
-                    <td className="px-6 py-4">
-                      {STATUS[service.status]}
-                    </td>
-                    <td className="px-6 py-4">
-                      {service.category_name}
-                    </td>
-                    <td className="px-6 py-4">
-                      <D.Levels color={handleColorType(service.levels_name)}>{service.levels_name}</D.Levels>
-                    </td>
+                    <th scope="col" className="px-6 py-3">
+                      Descrição
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Estado
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Categoria
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Prioridade
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {showModal && (
-            <Modal handleSubmitServices={handleSubmitServices} showModal={handleShowModal}/>
-          )}
+                </thead>
+                <tbody>
+                  {services.map((service, index) => (
+                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
+                      <td className="px-6 py-4">
+                        {service.customer_name}
+                      </td>
+                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {service.subject}
+                      </th>
+                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {service.description}
+                      </th>
+                      <td className="px-6 py-4">
+                        {STATUS[service.status]}
+                      </td>
+                      <td className="px-6 py-4">
+                        {service.category_name}
+                      </td>
+                      <td className="px-6 py-4">
+                        <D.Levels color={handleColorType(service.levels_name)}>{service.levels_name}</D.Levels>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {showModal && (
+              <Modal handleSubmitServices={handleSubmitServices} showModal={handleShowModal}/>
+            )}
           </>
-        )}  
+        )}
       </D.Content>
       <ToastContainer />
     </D.Container>
