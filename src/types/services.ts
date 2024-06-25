@@ -4,4 +4,5 @@ export type ServicesType = {
     status: number;
     category_name: string;
     levels_name: string;
+    customer_name: string;
 }

@@ -24,7 +24,7 @@ export const Header = styled.header`
     width: 86vw;
 `
 
-export const spLevels = styled.span<{ color: string }>`
+export const Levels = styled.span<{ color: string }>`
     display: inline-block;
     background-color: ${(props) => props.color};
     font-size: 16px;
