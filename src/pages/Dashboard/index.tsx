@@ -47,11 +47,11 @@ export const Dashboard = () => {
   const handleSubmitServices = async (data: ServicesType) => {
     try {
       const services = await api.post('/services', {
-        customer: 1,
+        user: 1,
         description: data.description,
         subject: data.subject,
         category: data.category_name,
-        customer_name: data.customer_name,
+        customer: data.customer_name,
         priorityLevel: 1,
         status: 0
       })
