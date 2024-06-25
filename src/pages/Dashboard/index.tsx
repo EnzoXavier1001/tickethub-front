@@ -5,9 +5,11 @@ import { ChatCenteredText } from '@phosphor-icons/react';
 import { ServicesType } from '../../types/services';
 import { Loading } from '../../components/Loading';
 import { Modal } from '../../components/Modal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const STATUS = [
-  'Criado',
+  'Aberto',
   'Cancelado',
   'Em andamento',
   'Concluído'
@@ -21,6 +23,8 @@ const handleColorType = (color: string) => {
       return "#ffc107";
     case "Alta":
       return "#dc3545";
+    default:
+      return '#CCCCCC'
   }
 };
 
@@ -40,12 +44,31 @@ export const Dashboard = () => {
     }
   }
 
+  const handleSubmitServices = async (data: ServicesType) => {
+    try {
+      const services = await api.post('/services', {
+        customer: 1,
+        description: data.description,
+        subject: data.subject,
+        category: data.category_name,
+        customer_name: data.customer_name,
+        priorityLevel: 1,
+        status: 0
+      })
+
+      setServices(services.data);
+
+      toast.success('Chamado registrado com sucesso!')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleShowModal = (isShow: boolean) => {
     setShowModal(isShow)
   }
 
   useEffect(() => {
-    console.log('renderizou')
     getServices();
   }, []);
 
@@ -74,6 +97,9 @@ export const Dashboard = () => {
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-6 py-3">
+                    Cliente
+                  </th>
+                  <th scope="col" className="px-6 py-3">
                     Assunto
                   </th>
                   <th scope="col" className="px-6 py-3">
@@ -93,6 +119,9 @@ export const Dashboard = () => {
               <tbody>
                 {services.map((service, index) => (
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
+                    <td className="px-6 py-4">
+                      {service.customer_name}
+                    </td>
                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {service.subject}
                     </th>
@@ -106,7 +135,7 @@ export const Dashboard = () => {
                       {service.category_name}
                     </td>
                     <td className="px-6 py-4">
-                      <D.spLevels color={handleColorType(service.levels_name)}>{service.levels_name}</D.spLevels>
+                      <D.Levels color={handleColorType(service.levels_name)}>{service.levels_name}</D.Levels>
                     </td>
                   </tr>
                 ))}
@@ -114,11 +143,12 @@ export const Dashboard = () => {
             </table>
           </div>
           {showModal && (
-            <Modal showModal={handleShowModal}/>
+            <Modal handleSubmitServices={handleSubmitServices} showModal={handleShowModal}/>
           )}
           </>
-        )}
+        )}  
       </D.Content>
+      <ToastContainer />
     </D.Container>
   );
 };
