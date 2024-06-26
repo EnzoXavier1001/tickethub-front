@@ -5,4 +5,5 @@ export type ServicesType = {
     category_name: string;
     levels_name: string;
     customer_name: string;
+    levels_color: string;
 }
